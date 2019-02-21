@@ -1,6 +1,7 @@
-- hosts: webserver.prod
+- hosts: webserver.*
+  gather_facts: true
   become: yes
   vars:
-    domain_name: "webserver.prod"
+    domain_name: "{{ ansible_fqdn }}"
   roles:
   - webserver
