@@ -1,0 +1,14 @@
+[webserver.dev]
+172.28.128.4
+[database.dev]
+172.28.128.5
+
+[webserver.staging]
+172.28.128.6
+[database.staging]
+172.28.128.7
+
+[webserver.prod]
+172.28.128.8
+[database.prod]
+172.28.128.9

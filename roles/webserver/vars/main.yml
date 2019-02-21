@@ -1,0 +1,4 @@
+---
+# vars file for ./roles/webserver/
+http_port: 80
+domain: "{{domain_name}}.vagrant.local"

@@ -1,0 +1,6 @@
+name: Afficher facts DEV
+	setup:
+		gather_subset:
+ 			- '!all'
+			- '!any'
+			- facter

@@ -1,0 +1,9 @@
+- hosts: localhost
+  vars:
+    test: CA_MARCHE
+  tasks:
+  - name: Valorise
+    template:
+      src: /vagrant/model.txt
+      dest: /vagrant/model.ok
+ 

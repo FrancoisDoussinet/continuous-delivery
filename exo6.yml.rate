@@ -1,0 +1,44 @@
+- hosts: webserver.staging
+  become: yes
+  vars:
+    domain_name: webserver_staging
+
+  tasks:
+  - name: Create dir /vagrant
+    file :
+     path: /vagrant/roles
+     state: directory
+     mode: 0755
+
+  - name: remove ansible
+    package:
+     name: ansible
+     state: absent 
+
+  - name: install ansible
+    package: 
+     name: ansible
+     state: present
+
+  - name: MAJ Ansible CFG
+    lineinfile:
+      path: /etc/ansible/ansible.cfg
+      regexp: '^roles_path    = /etc/ansible/roles:/usr/share/ansible/roles'
+      line: 'roles_path    = /vagrant/roles'
+
+  - name: Install apache geerlingguy
+    command: ansible-galaxy install geerlingguy.apache-php-fpm
+
+  - name: Create role
+    command: "ansible-galaxy init /vagrant/roles/{{ domain_name }} --force"
+
+  - name: Copy files/<roles>
+    copy:
+      src: "/vagrant/files/{{ item }}_main.yml"
+      dest: "/vagrant/roles/{{ domain_name }}/{{ item }}/{{ item }}_main.yml"
+      mode: 0644
+    with_items:
+      - tasks
+      - vars
+      - handlers
+

@@ -1,0 +1,61 @@
+- hosts: dev.webserver
+  tasks:
+  - name: install apache
+    yum: 
+      name: httpd
+      state: latest
+    become: yes
+    become_user: root
+    notify:
+      - enable httpd.service
+
+  - name: start apache
+    service:
+      name: httpd 
+      enabled: yes 
+
+  - name: Create Dir /var/www/dev.webserver/public_html
+    file:
+      path: /var/www/dev.webserver/public_html
+      state: directory
+
+  - name: Change permissions /var/www/dev.webserver/
+    vars:
+      user: vagrant
+    file:
+      path: /var/www/dev.webserver/
+      state: directory
+      owner: "{{ user }}"
+      group: "{{ user }}"
+
+  - name: Change permissions /var/www
+    file:
+      path: /var/www
+      state: directory
+      mode: 0755
+
+  - name: write in file /var/www/dev.webserver/public_html/index.html
+    vars:
+      HOST: “<html><body><h1>dev.webserver Ansible Training </h1></body></html>”
+    template:
+      src: "{{ playbook_dir }}/index.html"
+      dest: /var/www/dev.webserver/public_html/index.html
+
+  - name: modif line in http.conf
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^<Directory "/var/www/html">'
+      line: '<Directory "/var/www/dev.webserver/public_html">'
+    notify:
+      - reload httpd.service 
+
+  handlers:
+  - name: enable httpd.service
+    service:
+      name: httpd
+      state: started
+     
+  - name: reload httpd.service
+    service: 
+      name: httpd
+      state: restarted

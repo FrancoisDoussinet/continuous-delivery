@@ -1,0 +1,9 @@
+- hosts: all
+  remote_user: vagrant
+  gather_facts: yes
+  tasks:
+  - name: Get IP address
+    set_fact:
+       ip: "{{ item }}"
+    with_items: "{{ ansible_all_ipv4_addresses }}"
+  - debug: var=ip
